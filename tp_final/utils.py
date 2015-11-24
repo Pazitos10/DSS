@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import confusion_matrix, roc_curve, auc
@@ -19,8 +20,10 @@ def get_otto_dataset(dataset_path):
     return X, y, n_classes
 
 def save_plot(filename):
+    if not os.path.exists('plots'):
+        os.makedirs('plots')
     plt.savefig("plots/"+filename)
-    print "Saved: ", filename
+    print "Saved: plots/"+filename
 
 def plot_matrix(clf, X_test, y_test, filename):
     """Plot Confussion Matrix from a given classifier"""
@@ -40,6 +43,7 @@ def plot_decision_area(clf, X, y, title=None, filename=None):
     cmap = plt.cm.RdYlBu
     plot_step = 0.02  # fine step width for decision surface contours
     plot_step_coarser = 0.5  # step widths for coarse classifier guesses
+    plt.clf()
 
     clf.fit(X, y)
     score = clf.score(X, y)
@@ -90,7 +94,8 @@ def plot_roc_curve(n_classes, y_test, y_score, filename=None):
         #fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score.ravel())
         fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
         roc_auc[i] = auc(fpr[i], tpr[i])
-     
+    plt.clf()
+
     fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
     roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
 
@@ -108,6 +113,7 @@ def plot_roc_curve(n_classes, y_test, y_score, filename=None):
     save_plot("roc_curve_label_2_"+str(filename)+".png")
     #plt.show()
 
+    plt.clf()
     all_fpr = np.unique(np.concatenate([fpr[i] for i in range(n_classes)]))
     mean_tpr = np.zeros_like(all_fpr)
     for i in range(n_classes):
@@ -149,6 +155,7 @@ def plot_roc_curve(n_classes, y_test, y_score, filename=None):
 def plot_learning_curve(estimator, title, X, y, ylim=(0, 1.1), cv=None,
                         n_jobs=-1, train_sizes=np.linspace(.1, 1.0, 5), 
                         filename=None):
+    plt.clf()
     plt.figure()
     plt.title(title)
     if ylim is not None:
@@ -181,6 +188,7 @@ def plot_learning_curve(estimator, title, X, y, ylim=(0, 1.1), cv=None,
 def plot_validation_curve(estimator, X, y, param_name, param_range,
                       ylim=(0, 1.1), cv=None, n_jobs=-1, scoring=None, 
                       filename=None):
+    plt.clf()
     estimator_name = type(estimator).__name__
     plt.title("Validation curves for %s on %s"
           % (param_name, estimator_name))

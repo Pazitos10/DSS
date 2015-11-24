@@ -7,7 +7,8 @@ from sklearn.cross_validation import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import MinMaxScaler, label_binarize
 from utils import get_otto_dataset, plot_roc_curve, \
-                    plot_accuracy, plot_loss
+                    plot_accuracy, plot_loss, \
+                    plot_matrix
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -71,7 +72,9 @@ print("Predicted: %s" % str(net0.predict(X_test[:1])))
 
 print "[Classification Report]: "
 print classification_report(y_test, predicted)
+print "[Train dataset] Score: ", net0.score(X_train, y_train)
 print "[Test dataset] Score: ", net0.score(X_test, y_test)
+plot_matrix(net0, X_test, y_test, filename)
 
 valid_accuracies = np.array([i["valid_accuracy"] for i in net0.train_history_])
 plot_accuracy(valid_accuracies, filename)
